@@ -5,6 +5,9 @@ from .salient_attention import *
 
 
 def build_model(start_neurons):
+    """
+    SPEEDNet Network
+    """
     input_layer = Input((224, 224, 3),dtype='float32')
 
     conv1 = conv_block(input_layer,3,start_neurons * 2)
@@ -48,34 +51,27 @@ def build_model(start_neurons):
     dwns4 = MaxPooling2D(16,16)(input2)
     attn4 = SalientAttentionBlock(conv4, dwns4, pool4,avg_pool4,start_neurons * 16,40)
 
-
-    # Middle
     convm=bottleneck(attn4,start_neurons * 32)
-
     
     deconv4 = keras.layers.UpSampling2D((2, 2),data_format="channels_last")(convm)
     uconv4 = concatenate([deconv4, conv4])
     uconv4 = Conv2D(start_neurons * 16, (3, 3), activation="relu", padding="same")(uconv4)
     uconv4 = Conv2D(start_neurons * 16, (3, 3), activation="relu", padding="same")(uconv4)
-#     uconv4= Add()([uconv4,conv4])
 
     deconv3 = keras.layers.UpSampling2D((2, 2),data_format="channels_last")(uconv4)
     uconv3 = concatenate([deconv3, conv3])
     uconv3 = Conv2D(start_neurons * 8, (3, 3), activation="relu", padding="same")(uconv3)
     uconv3 = Conv2D(start_neurons * 8, (3, 3), activation="relu", padding="same")(uconv3)
-#     uconv3= Add()([uconv3,conv3])
 
     deconv2 = keras.layers.UpSampling2D((2, 2),data_format="channels_last")(uconv3)
     uconv2 = concatenate([deconv2, conv2])
     uconv2 = Conv2D(start_neurons * 4, (3, 3), activation="relu", padding="same")(uconv2)
     uconv2 = Conv2D(start_neurons * 4, (3, 3), activation="relu", padding="same")(uconv2)
-#     uconv2= Add()([uconv2,conv2])
 
     deconv1 = keras.layers.UpSampling2D((2, 2),data_format="channels_last")(uconv2)
     uconv1 = concatenate([deconv1, conv1])
     uconv1 = Conv2D(start_neurons *2 ,(3, 3), activation="relu", padding="same")(uconv1)
     uconv1 = Conv2D(start_neurons * 2, (3, 3), activation="relu", padding="same")(uconv1)
-#     uconv1= Add()([uconv1,conv1])
     
     
     output_layer = layers.BatchNormalization(axis=3)(uconv1)

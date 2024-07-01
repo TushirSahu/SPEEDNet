@@ -1,0 +1,7 @@
+keras_flops
+tensorflow
+keras
+numpy
+opencv-python
+albumentations
+matplotlib
