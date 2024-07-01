@@ -6,9 +6,9 @@ def expand_as(tensor, rep):
 
 def SalientAttentionBlock(feature_maps, saliency_input, num_feature_maps):
     """
-        Salient Attention Block
-        input:fmaps, saliency_input, num_fmaps
-        output: attention_activation
+    Salient Attention Block
+    input: fmaps, saliency_input, num_fmaps
+    output: attention_activation
     """
 
     # Saliency Input Pathway
